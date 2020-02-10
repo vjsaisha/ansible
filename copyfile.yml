@@ -2,5 +2,5 @@
   tasks:
   - name: Ansible copy file to remote server
     copy:
-      src: /tmp/sample.txt
-      dest: /root/sample.txt
+      src: /tmp/sample1.txt
+      dest: /root/sample1.txt
