@@ -1,0 +1,25 @@
+---
+- name: Install the package
+  hosts: dev,test,prod
+  vars:
+    package:
+    - httpd
+    - mariadb
+  tasks:
+    - name: Install package on all nodes
+      yum:
+        name: "{{item}}"
+        state: present
+      loop: "{{package}}"
+    - name: Install RPM development tools
+      yum:
+        name: "@RPM Development Tools"
+        state: latest
+      when: "'dev' in group_names"
+    - name: All latest package
+      yum:
+        name: '*'
+        state: latest
+      when: "'dev' in group_names"
+
+
