@@ -3,8 +3,8 @@
   hosts: dev,test,prod
   vars:
     package:
-    - httpd
-    - mariadb
+      - httpd
+      - mariadb
   tasks:
     - name: Install package on all nodes
       yum:

@@ -1,0 +1,13 @@
+# Install the rhel-system-roles package in server.
+# Copy the /usr/share/doc/rhel-system-roles-1.0/timesync/example-timesync-playbook.yml to timesync.yml
+
+---
+- name: Time synchronize the server.
+  hosts: all
+  vars:
+    timesync_ntp_servers:
+      - hostname: 0.pool.ntp.org
+        iburst: yes
+  roles:
+    - role: rhel-system-roles.timesync
+...
