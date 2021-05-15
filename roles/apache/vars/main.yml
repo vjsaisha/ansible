@@ -1,2 +1,11 @@
 ---
 # vars file for apache
+package:
+  - httpd
+  - firewalld
+roservice:
+  - httpd
+  - firewalld
+fwrules:
+  - http
+  - https
