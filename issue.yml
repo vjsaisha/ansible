@@ -1,0 +1,21 @@
+---
+- name: Modify the issue statement
+  hosts: all
+  tasks:
+    - name: Content for dev server
+      copy:
+        content: "Development"
+        dest: /etc/issue
+      when: "'dev' in group_names"
+      
+    - name: Content for test server
+      copy:
+        content: "test"
+        dest: /etc/issue
+      when: "'test' in group_names"
+
+    - name: Content for Production server
+      copy:
+        content: "Production"
+        dest: /etc/issue    
+      when: "'prod' in group_names"

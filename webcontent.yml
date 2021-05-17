@@ -1,0 +1,37 @@
+---
+- name: Deploy webcontent in DEV servers
+  hosts: dev
+  tasks:
+    - name : create webdev group
+      group:
+        name: webdev
+
+    - name: Create webdev
+      file:
+        path: /webdev
+        mode: 2775
+        state: directory
+        group: webdev
+
+    - name: Install httpd server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Enabled httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Create symlink for webdev
+      file:
+        src: /webdev
+        dest: /var/www/html/webdev
+        state: link
+
+    - name: Copy inline content
+      copy:
+        content: 'Development'
+        dest: /webdev/index.html
+        setype: httpd_sys_content_t
