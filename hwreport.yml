@@ -1,0 +1,30 @@
+---
+- name: Prepare hardaware report
+  hosts: all
+  vars:
+    hwall :
+      - hwline : HOST
+        hwvalue: "{{ansible_fqdn}}"
+      - hwline: MEMORY
+        hwvalue: "{{ansible_memtotal_mb}}"
+      - hwline: BIOS
+        hwvalue: "{{ansible_bios_version}}"
+      - hwline: DISK_SIZE_VDA
+        hwvalue: "{{ansible_devices.vda.size | default ('NONE', true) }}"
+      - hwline : DISK_SIZE_VDB
+        hwvalue : "{{ansible_devices.vdb.size | default ('NONE', true) }}"
+  tasks:
+    - name: get hwreport.txt
+      get_url:
+        url: http://192.168.33.10/hwreport.txt
+        dest: /root/hwreport.txt
+        checksum: "sha256:8bf1746b89ba94b2befbf2a7e7d0f89f9e3d3a65ac383dc0fb58175fdf90da25"
+
+    - name: template report for hwreport
+      lineinfile:
+        path: /root/hwreport.txt
+        regexp: "^{{item.hwline}}"
+        line: "{{item.hwline}} = {{item.hwvalue}}"
+      loop: "{{hwall}}"
+
+      
