@@ -1,0 +1,34 @@
+---
+- name: create users based on job description
+  hosts: all
+  vars_files:
+    - user_list.yml
+    - locker.yml
+  tasks:
+    - name: Create devops group in dev and test
+      group:
+        name: devops
+      when: inventory_hostname in groups['dev'] or inventory_hostname in groups['test']
+    
+    - name: Create developer in dev and test
+      user:
+        name: "{{ item.name }}"
+        groups: devops
+        password: "{{pw_developer | password_hash ('sha512') }}"
+      loop: "{{users}}"
+      when: (inventory_hostname in groups['dev'] or inventory_hostname in groups['test'] ) and  item.job == 'developer'
+
+    - name: Create devops group in prod
+      group:
+        name: opsmgr
+      when: inventory_hostname in groups['prod'] 
+
+    - name: Create manager in prod
+      user:
+        name: "{{ item.name }}"
+        groups: opsmgr
+        password: "{{pw_manager | password_hash ('sha512') }}"
+      loop: "{{users}}"
+      when: inventory_hostname in groups['prod'] and item.job == 'manager'
+
+
